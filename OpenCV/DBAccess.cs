@@ -9,20 +9,20 @@ namespace OpenCV
 {
     public class DBAccess : IDBAccess
     {
-        public string SaveFace(string username, byte[] faceBlob)
-        {
-            //var connection = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection())
-            {
-                conn.ConnectionString = "Server=[server_name];Database=[database_name];Trusted_Connection=true";
-                // using the code here...
-            }
-        }
+        //public string SaveFace(string username, byte[] faceBlob)
+        //{
+        //    //var connection = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
+        //    using (SqlConnection conn = new SqlConnection())
+        //    {
+        //        conn.ConnectionString = "Server=[server_name];Database=[database_name];Trusted_Connection=true";
+        //        // using the code here...
+        //    }
+        //}
 
-        public List<Face> CallFaces(string username)
-        {
-            throw new NotImplementedException();
-        }
+        //public List<Face> CallFaces(string username)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public bool IsUsernameValid(string username)
         {

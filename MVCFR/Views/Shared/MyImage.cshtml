@@ -1,0 +1,10 @@
+﻿@model MVCFR.Models.UserFaceInfo
+@{
+    if (Model.faceSample != null)
+    {
+        WebImage img = new WebImage(Model.faceSample);
+        img.Resize(700, 700, true, true);
+        img.Write();
+    }
+}
+

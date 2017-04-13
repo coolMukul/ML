@@ -8,8 +8,8 @@ namespace OpenCV
 {
     interface IDBAccess
     {
-        String SaveFace(String username, Byte[] faceBlob);
-        List<Face> CallFaces(String username);
+        //String SaveFace(String username, Byte[] faceBlob);
+        //List<Face> CallFaces(String username);
         bool IsUsernameValid(String username);
         String SaveAdmin(String username, String password);
         bool DeleteUser(String username);

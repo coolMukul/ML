@@ -1,0 +1,13 @@
+﻿@model MVCFR.Models.UserFaceInfo
+@{
+    ViewBag.Title = "ImageLayout";
+    if (Model.faceSample != null)
+    {
+        WebImage img = new WebImage(Model.faceSample);
+        img.Resize(700, 700, true, true);
+        img.Write();
+    }
+}
+
+<h2>ImageLayout</h2>
+

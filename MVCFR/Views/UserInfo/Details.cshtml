@@ -1,0 +1,54 @@
+﻿@model MVCFR.Models.UserFaceInfo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>UserFaceInfo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.username)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.username)
+        </dd>
+
+        <dt>
+            @if (Model.faceSample != null && Model.faceSample.Length > 0)
+            {
+                <imgalt="tag" src ="@Url.Content("/UserInfo/MyImage?id=" + Model.id )" />
+            }
+            @*@Html.DisplayNameFor(model => model.faceSample)*@
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.faceSample)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.userId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.userId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tag)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
