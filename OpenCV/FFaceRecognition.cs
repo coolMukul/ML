@@ -2,13 +2,17 @@
 using System.Windows.Forms;
 using OpenCVInterface;
 using System.Drawing;
+using System.Linq;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace OpenCV
 {
     public partial class FFaceRecognition : Form
     {
         private MLEntities db = new MLEntities();
-        string filename = @"C:\Users\mukul.varshney\Desktop\DotNet\FaceRecognition\Images\lena.jpg";
+        string filename = @"C:\Users\mukul.varshney\Desktop\DotNet\FaceRecognition\Images\Group2016.jpg";
+        string fileTrainedData = @"C:\Users\mukul.varshney\Desktop\DotNet\FaceRecognition\trained.yml";
         double scaleFactor = 1.2;
         int neighbours = 4;
         string[] faceNames;
@@ -80,7 +84,7 @@ namespace OpenCV
                     ShowFace();
                 }      
                 else
-                    pictureBox1.Image = this.pictureBox1.Image = System.Drawing.Image.FromFile(filename);
+                    this.pictureBox1.Image = Image.FromFile(filename);
             }
             catch (Exception ex)
             {
@@ -179,10 +183,18 @@ namespace OpenCV
             prevFaceIndex = faceIndex;
         }
         
-        private byte[] ImageToByte(Image img)
+        private byte[] ImageToBytes(Image img)
         {
             ImageConverter converter = new ImageConverter();
             return (byte[])converter.ConvertTo(img, typeof(byte[]));
+        }
+
+        private Image BytesToImage(byte[] byteArrayIn)
+        {
+            using (MemoryStream mStream = new MemoryStream(byteArrayIn))
+            {
+                return Image.FromStream(mStream);
+            }
         }
 
         private void SaveToDB()
@@ -197,7 +209,7 @@ namespace OpenCV
                 {
                     var userFaceInfo = new UserFaceInfo
                     {
-                        faceSample = ImageToByte(faceList[counter]),
+                        faceSample = ImageToBytes(faceList[counter]),
                         userId = 1,
                         username = faceNames[counter],
                         tag = ""
@@ -230,6 +242,75 @@ namespace OpenCV
                 default:
                     return path + "haarcascade_frontalface_default.xml";
             }
+        }
+
+        private void btnTrain_Click(object sender, EventArgs e)
+        {      
+            var dbFaces = db.UserFaceInfoes.ToList();
+            //Bitmap[] allfaces = new Bitmap[dbFaces.Count];
+            byte[][] byteFaces = new byte[dbFaces.Count][];
+            int[] allIds = new int[dbFaces.Count];
+
+            for (int counter = 0; counter < dbFaces.Count; counter++)
+            {
+                var item = db.UserFaceInfoes;
+                //allfaces[counter] = new Bitmap(BytesToImage(dbFaces[counter].faceSample));
+                byteFaces[counter] = dbFaces[counter].faceSample;
+                allIds[counter] = dbFaces[counter].userId;
+            }
+
+            var trainer = new Trainer
+            {
+                //bitmapImages = allfaces,
+                Ids = allIds,
+                imgBytes = byteFaces
+            };
+
+            try
+            {
+                trainer.FaceTrainer(fileTrainedData);
+                MessageBox.Show("Training done.");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnDetect_Click(object sender, EventArgs e)
+        {
+            var errText = ValidateInput();
+            if (errText.Length > 0)
+            {
+                MessageBox.Show(errText);
+                return;
+            }
+
+            this.lblCount.Text = "0";
+            EnablePanel(false);
+
+            #region face detection
+
+            try
+            {
+                Detector dt = new Detector();
+                //var bitmap = dt.Recognize(new Bitmap(this.pictureBox1.Image), fileTrainedData, GetHaarXMLFileName(), scaleFactor, neighbours, 25, 300);
+
+                var bitmap = dt.Recognize(filename, fileTrainedData, GetHaarXMLFileName(), scaleFactor, neighbours, 25, 300);
+
+                if (bitmap == null)
+                    this.pictureBox1.Image = Image.FromFile(filename);
+                else
+                    this.pictureBox1.Image = bitmap;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            #endregion
+
+            EnablePanel(true);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using OpenCvSharp.Face;
 
 namespace OpenCVInterface
 {
@@ -17,9 +18,9 @@ namespace OpenCVInterface
         private bool isColorImage { get; set; }
         public string fileName { get; set; }
 
-        public int FindFaces(string filename, string xml_haarFile, double scaleFactor, int neighbours, int minSquare, int maxSquare, bool isColor)
+        public int FindFaces(string imgFilename, string xml_haarFile, double scaleFactor, int neighbours, int minSquare, int maxSquare, bool isColor)
         {
-            fileName = filename;
+            fileName = imgFilename;
             isColorImage = isColor;
             frameOriginal = new Mat(fileName, ImreadModes.AnyColor);
             frameGray = new Mat(fileName, ImreadModes.GrayScale);
@@ -90,5 +91,6 @@ namespace OpenCVInterface
                 return 0;
             }
         }
+
     }
 }
