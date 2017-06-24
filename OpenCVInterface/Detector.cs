@@ -37,16 +37,7 @@ namespace OpenCVInterface
                     recognizer.Predict(frameGray[faceRectList[index]], out predictedId, out dblConfidence);
                     if (predictedId > 0)
                     {
-                        var labelName = "";
-                        switch (predictedId)
-                        {
-                            case 1:
-                                labelName = "Bill Gates";
-                                break;
-                            case 2:
-                                labelName = "Steve Jobs";
-                                break;
-                        }
+                        var labelName = GetLableName(predictedId);
                         var fnt = new HersheyFonts();
                         Cv2.PutText(frameOriginal, labelName, new OpenCvSharp.Point(x1, y1 + 10), fnt, 1, new Scalar(255, 0, 255));
                     }
@@ -94,16 +85,8 @@ namespace OpenCVInterface
                     recognizer.Predict(frameGray[faceRectList[index]], out predictedId, out dblConfidence);
                     if (predictedId > 0)
                     {
-                        var labelName = "";
-                        switch(predictedId)
-                        {
-                            case 1:
-                                labelName = "Bill Gates";
-                                break;
-                            case 2:
-                                labelName = "Steve Jobs";
-                                break;
-                        }
+                        var labelName = GetLableName(predictedId);
+                        
                         var fnt = new HersheyFonts();
                         Cv2.PutText(frameOriginal, labelName, new OpenCvSharp.Point(x1, y1 + 10), fnt, 5, new Scalar(255, 0, 255));
                     }
@@ -124,6 +107,8 @@ namespace OpenCVInterface
                 return null;
             }
 
+            
+
 
 
             //var recognizer = Cv2.CreateLBPHFaceRecognizer();
@@ -143,6 +128,27 @@ namespace OpenCVInterface
             //    }
             //    //
             //}
+        }
+
+        private string GetLableName(int predictedId)
+        {
+            var labelName = "";
+            switch (predictedId)
+            {
+                case 1:
+                    labelName = "Bill Gates";
+                    break;
+                case 2:
+                    labelName = "Steve Jobs";
+                    break;
+                case 3:
+                    labelName = "Lata Mangeshkar";
+                    break;
+                case 4:
+                    labelName = "Sanjay Srinivasmurthy";
+                    break;
+            }
+            return labelName;
         }
 
     }

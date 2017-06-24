@@ -51,11 +51,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnDetectFaces = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.picMain = new System.Windows.Forms.PictureBox();
             this.panelMain.SuspendLayout();
             this.panelFace.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFace)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMain)).BeginInit();
             this.SuspendLayout();
             // 
             // panelMain
@@ -73,7 +73,7 @@
             this.panelMain.Controls.Add(this.label1);
             this.panelMain.Controls.Add(this.btnBrowse);
             this.panelMain.Controls.Add(this.btnDetectFaces);
-            this.panelMain.Controls.Add(this.pictureBox1);
+            this.panelMain.Controls.Add(this.picMain);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 0);
             this.panelMain.Name = "panelMain";
@@ -82,17 +82,21 @@
             // 
             // btnDetect
             // 
+            this.btnDetect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDetect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDetect.Location = new System.Drawing.Point(737, 183);
             this.btnDetect.Name = "btnDetect";
             this.btnDetect.Size = new System.Drawing.Size(61, 26);
             this.btnDetect.TabIndex = 16;
-            this.btnDetect.Text = "Detect";
+            this.btnDetect.Text = "Verify";
             this.btnDetect.UseVisualStyleBackColor = true;
             this.btnDetect.Click += new System.EventHandler(this.btnDetect_Click);
             // 
             // btnTrain
             // 
-            this.btnTrain.Location = new System.Drawing.Point(664, 185);
+            this.btnTrain.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTrain.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTrain.Location = new System.Drawing.Point(662, 183);
             this.btnTrain.Name = "btnTrain";
             this.btnTrain.Size = new System.Drawing.Size(61, 26);
             this.btnTrain.TabIndex = 15;
@@ -293,18 +297,18 @@
             this.btnDetectFaces.UseVisualStyleBackColor = true;
             this.btnDetectFaces.Click += new System.EventHandler(this.btnDetectFaces_Click);
             // 
-            // pictureBox1
+            // picMain
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.picMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(650, 502);
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
+            this.picMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.picMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picMain.Location = new System.Drawing.Point(3, 3);
+            this.picMain.Name = "picMain";
+            this.picMain.Size = new System.Drawing.Size(650, 502);
+            this.picMain.TabIndex = 2;
+            this.picMain.TabStop = false;
             // 
             // FFaceRecognition
             // 
@@ -320,7 +324,7 @@
             this.panelFace.ResumeLayout(false);
             this.panelFace.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFace)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -331,7 +335,7 @@
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnDetectFaces;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox picMain;
         private System.Windows.Forms.TextBox txtScaleFactor;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtNeighbors;

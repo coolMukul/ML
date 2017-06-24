@@ -26,8 +26,8 @@ namespace OpenCV
 
         private void FFaceRecognition_Load(object sender, EventArgs e)
         {
-            this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.Image = System.Drawing.Image.FromFile(filename);
+            this.picMain.SizeMode = PictureBoxSizeMode.StretchImage;
+            this.picMain.Image = System.Drawing.Image.FromFile(filename);
             this.txtNeighbors.Text = neighbours.ToString();
             this.txtScaleFactor.Text = scaleFactor.ToString();
 
@@ -46,14 +46,61 @@ namespace OpenCV
             if (diagImg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 filename = diagImg.FileName;
-                this.pictureBox1.Image = System.Drawing.Image.FromFile(filename);
+                this.picMain.Image = System.Drawing.Image.FromFile(filename);
 
                 this.btnDetectFaces.PerformClick();
             }
         }
 
         private void btnDetectFaces_Click(object sender, EventArgs e)
-        {          
+        {
+            var dbFaces = db.UserFaceInfoes.ToList();
+            int[] allIds = new int[dbFaces.Count];
+
+            var errText = ValidateInput();
+            if (errText.Length > 0)
+            {
+                MessageBox.Show(errText);
+                return;
+            }
+
+            this.lblCount.Text = "0";
+            EnablePanel(false);
+
+            #region face detection
+
+            try
+            {
+                IOpenCV obj;
+                obj = new OpenCvEngine();
+                var faceCount = obj.FindFaces(fileTrainedData, filename, GetHaarXMLFileName(), scaleFactor, neighbours, 25, 300, true);
+
+                this.lblCount.Text = faceCount.ToString();
+                ResetFacePanel(false);
+
+                if (faceCount > 0)
+                {
+                    picMain.Image = obj.ImageWithRect;
+                    faceList = obj.GetFaces();
+                    faceNames = new string[faceCount];
+                    ResetFacePanel(true);
+                    ShowFace();
+                }      
+                else
+                    this.picMain.Image = Image.FromFile(filename);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
+            #endregion
+
+            EnablePanel(true);
+        }
+
+        private void btnDetectFaces_Click_old(object sender, EventArgs e)
+        {
             var errText = ValidateInput();
             if (errText.Length > 0)
             {
@@ -77,20 +124,20 @@ namespace OpenCV
 
                 if (faceCount > 0)
                 {
-                    pictureBox1.Image = obj.ImageWithRect;
+                    picMain.Image = obj.ImageWithRect;
                     faceList = obj.GetFaces();
                     faceNames = new string[faceCount];
                     ResetFacePanel(true);
                     ShowFace();
-                }      
+                }
                 else
-                    this.pictureBox1.Image = Image.FromFile(filename);
+                    this.picMain.Image = Image.FromFile(filename);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            
+
             #endregion
 
             EnablePanel(true);
@@ -207,10 +254,15 @@ namespace OpenCV
             {
                 if (!string.IsNullOrEmpty(faceNames[counter]))
                 {
+                    //Test code -- so please add the names to the detector OpenCVInterface -> Detector.cs -> GetLableName()
+                    //1. Bill Gates
+                    //2. Steve Jobs
+                    //3. Lata Mageshkar
+                    //4. Sanjay Srinivasmurthy
                     var userFaceInfo = new UserFaceInfo
                     {
                         faceSample = ImageToBytes(faceList[counter]),
-                        userId = 1,
+                        userId = 4,
                         username = faceNames[counter],
                         tag = ""
                     };
@@ -299,9 +351,9 @@ namespace OpenCV
                 var bitmap = dt.Recognize(filename, fileTrainedData, GetHaarXMLFileName(), scaleFactor, neighbours, 25, 300);
 
                 if (bitmap == null)
-                    this.pictureBox1.Image = Image.FromFile(filename);
+                    this.picMain.Image = Image.FromFile(filename);
                 else
-                    this.pictureBox1.Image = bitmap;
+                    this.picMain.Image = bitmap;
             }
             catch (Exception ex)
             {

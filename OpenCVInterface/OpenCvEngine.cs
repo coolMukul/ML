@@ -16,6 +16,8 @@ namespace OpenCVInterface
         private Mat frameOriginal { get; set; }
         private Rect[] faceRectList { get; set; }
         private bool isColorImage { get; set; }
+        private int[] allIds { get; set; }
+        private double[] allConfidence { get; set; }
         public string fileName { get; set; }
 
         public int FindFaces(string imgFilename, string xml_haarFile, double scaleFactor, int neighbours, int minSquare, int maxSquare, bool isColor)
@@ -25,6 +27,15 @@ namespace OpenCVInterface
             frameOriginal = new Mat(fileName, ImreadModes.AnyColor);
             frameGray = new Mat(fileName, ImreadModes.GrayScale);
             return DetectHaarCascadeInImage(xml_haarFile, scaleFactor, neighbours, minSquare, maxSquare);
+        }
+
+        public int FindFaces(string trainedDataFile, string imgFilename, string xml_haarFile, double scaleFactor, int neighbours, int minSquare, int maxSquare, bool isColor)
+        {
+            fileName = imgFilename;
+            isColorImage = isColor;
+            frameOriginal = new Mat(fileName, ImreadModes.AnyColor);
+            frameGray = new Mat(fileName, ImreadModes.GrayScale);
+            return DetectHaarCascadeInImage(trainedDataFile, xml_haarFile, scaleFactor, neighbours, minSquare, maxSquare);
         }
 
         public Bitmap[] GetFaces()
@@ -92,5 +103,62 @@ namespace OpenCVInterface
             }
         }
 
+        private int DetectHaarCascadeInImage(string trainedDataFile, string xml_haarFile, double scaleFactor, int neighbours, int minSquare, int maxSquare)
+        {
+            int predictedId = 0;
+            double confidence = 0.0;
+            var recognizer = Cv2.CreateLBPHFaceRecognizer();
+            recognizer.Load(trainedDataFile);
+            var minBoyut = new OpenCvSharp.Size(minSquare, minSquare);
+            var maxBoyut = new OpenCvSharp.Size(maxSquare, maxSquare);
+            var haarCascade = new CascadeClassifier(xml_haarFile);
+            faceRectList = haarCascade.DetectMultiScale(frameGray, scaleFactor, neighbours, 0, minBoyut, maxBoyut);
+            
+            if (faceRectList.Length > 0)
+            {
+                allIds = new int[faceRectList.Length];
+                allConfidence = new double[faceRectList.Length];
+                for (int index = 0; index <= faceRectList.Length - 1; index++)
+                {
+                    int x1 = faceRectList[index].Location.X;
+                    int y1 = faceRectList[index].Location.Y;
+                    int x2 = faceRectList[index].Location.X + faceRectList[index].Width;
+                    int y2 = faceRectList[index].Location.Y + faceRectList[index].Height;
+                    recognizer.Predict(frameGray[faceRectList[index]], out predictedId, out confidence);
+                    if (predictedId >0)
+                    {
+                        allIds[index] = predictedId;
+                        allConfidence[index] = confidence;
+                    }
+
+                    OpenCvSharp.Point pt1 = new OpenCvSharp.Point(x1, y1);
+                    OpenCvSharp.Point pt2 = new OpenCvSharp.Point(x2, y2);
+
+                    if (isColorImage)
+                        Cv2.Rectangle(frameOriginal, pt1, pt2, new Scalar(0, 255, 255));
+                    else
+                        Cv2.Rectangle(frameGray, pt1, pt2, new Scalar(0, 255, 255));
+                }
+                return faceRectList.Length;
+            }
+            else
+            {
+                frameGray = null;
+                frameOriginal = null;
+                faceRectList = null;
+                return 0;
+            }
+        }
+
+        public int[] DetectedIds
+        {
+            get { return allIds; }
+        }
+
+
+        public double[] ConfidenceOfIds
+        {
+            get { return allConfidence; }
+        }
     }
 }
